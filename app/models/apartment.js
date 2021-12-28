@@ -6,29 +6,30 @@ const apartmentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        rent: {
+            type: String,
+            required: true,
+        },
         description: {
             type: String,
             required: true,
         },
-        artist: {
+        location: {
             type: String,
             required: true,
         },
-        isAssigned: {
-            type: Boolean,
+
+        bedrooms: {
+            type: String,
+            required: true
+        },
+        bathrooms: {
+            type: String,
             required: true,
         },
         tags: {
             type: [mongoose.Schema.Types.ObjectId],
             ref: 'Tag',
-            required: true,
-        },
-        isPurchased: {
-            type: Boolean,
-            required: true
-        },
-        price: {
-            type: Number,
             required: true,
         },
         imgUrl: {

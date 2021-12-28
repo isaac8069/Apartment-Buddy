@@ -15,12 +15,12 @@ const profileSchema = new mongoose.Schema(
       type: String,
       required: true
     },
-    tags: {
+    tag: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Tag',
       required: true
     },
-    likedApartment: {
+    apartment: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Apartment'
     }

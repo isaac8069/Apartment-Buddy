@@ -3,7 +3,7 @@ const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
-// pull in Mongoose model for tags
+// pull in Mongoose model for apartments
 const Apartment = require('../models/apartment')
 
 // this is a collection of methods that help us detect situations when we need
@@ -14,7 +14,7 @@ const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
 
 // this is middleware that will remove blank fields from `req.body`, e.g.
-// { tag: { title: '', text: 'foo' } } -> { tag: { text: 'foo' } }
+// { apartment: { title: '', text: 'foo' } } -> { apartment: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
 // // passing this as a second argument to `router.<verb>` will make it
 // // so that a token MUST be passed for that route to be available
@@ -25,16 +25,16 @@ const router = express.Router()
 
 
 // INDEX
-// GET /tags
+// GET /apartments
 router.get('/apartments', (req, res, next) => {
 	Apartment.find()
 		.then((apartments) => {
-			// `tags` will be an array of Mongoose documents
+			// `apartments` will be an array of Mongoose documents
 			// we want to convert each one to a POJO, so we use `.map` to
 			// apply `.toObject` to each one
 			return apartments.map((apartment) => apartment.toObject())
 		})
-		// respond with status 200 and JSON of the tags
+		// respond with status 200 and JSON of the apartments
 		.then((apartments) => res.status(200).json({ apartments: apartments }))
 		// if an error occurs, pass it to the handler
 		.catch(next)
@@ -42,11 +42,11 @@ router.get('/apartments', (req, res, next) => {
 
 
 // CREATE
-// POST /tags
+// POST /apartments
 router.post('/apartments', (req, res, next) => {
 
 	Apartment.create(req.body.apartment)
-		// respond to succesful `create` with status 201 and JSON of new "tag"
+		// respond to succesful `create` with status 201 and JSON of new "apartment"
 		.then((apartment) => {
 			res.status(201).json({ apartment: apartment.toObject() })
 		})
@@ -57,12 +57,12 @@ router.post('/apartments', (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /tags/5a7db6c74d55bc51bdf39793
+// DELETE /apartments/5a7db6c74d55bc51bdf39793
 router.delete('/apartments/:id', (req, res, next) => {
 	Apartment.findById(req.params.id)
 		.then(handle404)
 		.then((apartment) => {
-			// delete the tag ONLY IF the above didn't throw
+			// delete the apartment ONLY IF the above didn't throw
 			apartment.deleteOne()
 		})
 		// send back 204 and no content if the deletion succeeded
