@@ -16,10 +16,11 @@ const handle404 = customErrors.handle404
 // this is middleware that will remove blank fields from `req.body`, e.g.
 // { apartment: { title: '', text: 'foo' } } -> { apartment: { text: 'foo' } }
 const removeBlanks = require('../../lib/remove_blank_fields')
+const profile = require('../models/profile')
 // // passing this as a second argument to `router.<verb>` will make it
 // // so that a token MUST be passed for that route to be available
 // // it will also set `req.user`
-// const requireToken = passport.authenticate('bearer', { session: false })
+const requireToken = passport.authenticate('bearer', { session: false })
 
 const router = express.Router()
 
@@ -43,7 +44,9 @@ router.get('/apartments', (req, res, next) => {
 
 // CREATE
 // POST /apartments
-router.post('/apartments', (req, res, next) => {
+router.post('/apartments', requireToken, (req, res, next) => {
+
+	req.body.apartment.userId = req.user._id
 
 	Apartment.create(req.body.apartment)
 		// respond to succesful `create` with status 201 and JSON of new "apartment"
@@ -56,7 +59,25 @@ router.post('/apartments', (req, res, next) => {
 		.catch(next)
 })
 
-// DESTROY
+// UPDATE
+// PATCH /apartments/5a7db6c74d55bc51bdf39793
+router.patch('/apartments/:id', requireToken, removeBlanks, (req, res, next) => {
+
+	delete req.body.apartment.userId
+
+	Apartment.findById(req.params.id)
+	.then(handle404)
+	.then((apartment) => {
+
+		return apartment.updateOne(req.body.apartment)
+	})
+
+	.then((apartments) => res.status(200).json({ apartments: apartments }))
+
+	.catch(next)
+})
+
+// DESTROY using apartment id
 // DELETE /apartments/5a7db6c74d55bc51bdf39793
 router.delete('/apartments/:id', (req, res, next) => {
 	Apartment.findById(req.params.id)

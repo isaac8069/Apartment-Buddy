@@ -7,6 +7,11 @@ const tagSchema = new mongoose.Schema(
 			required: true,
 			unique: true,
 		},
+		apartments: {
+            type: [mongoose.Schema.Types.ObjectId],
+            ref: 'Apartment',
+            required: true,
+        },
 	}
 )
 

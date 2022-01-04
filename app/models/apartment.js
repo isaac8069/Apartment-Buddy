@@ -2,6 +2,11 @@ const mongoose = require('mongoose')
 
 const apartmentSchema = new mongoose.Schema(
     {
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        },
         title: {
             type: String,
             required: true,
@@ -27,11 +32,11 @@ const apartmentSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        tags: {
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: 'Tag',
-            required: true,
-        },
+        // tags: {
+        //     type: [mongoose.Schema.Types.ObjectId],
+        //     ref: 'Tag',
+        //     required: true,
+        // },
         imgUrl: {
             type: String,
             required: true,
